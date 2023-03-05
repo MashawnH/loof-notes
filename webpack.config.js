@@ -1,5 +1,6 @@
 const path = require('path')
 module.exports = {
+  mode: 'development',
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -8,7 +9,21 @@ module.exports = {
   devServer: {
     static: {       
       directory: path.resolve(__dirname, './dist')
-    }
+    },
   },
-  mode: 'development'
+  
+  module: {
+    rules: [
+      {
+        test: /\.(js)x?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.jsx', '.js'],
+  },
 }
