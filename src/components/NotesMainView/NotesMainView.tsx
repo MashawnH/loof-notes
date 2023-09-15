@@ -9,7 +9,7 @@ const NotesMainView: FC = () => {
 
     return (
         <>
-            <div> Hello World</div>
+            <div>Loof Note</div>
             <Container>
                 <Row>
                     <Col className="bg-light border">
