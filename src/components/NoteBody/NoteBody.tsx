@@ -3,10 +3,9 @@ import Editor from '../Editor/Editor';
 
 const NoteBody: FC = () => {
 
-
-    return (
-      <Editor></Editor>
-    );
+  return (
+    <Editor></Editor>
+  );
 }
 
 export default NoteBody;
