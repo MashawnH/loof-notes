@@ -15,10 +15,10 @@ const NotesMainView: FC = () => {
 
       <Container>
         <Row>
-          <Col className="bg-light border">
+          <Col style={{ minHeight: '90vh', maxHeight: '90vh', overflowY: 'auto'}} className={"bg-light border"} xs="3" widths={['xs']}>
             <NoteHeader />
           </Col>
-          <Col className="bg-light border">
+          <Col style={{ minHeight: '90vh', maxHeight: '90vh', overflowY: 'auto'}} className="bg-light border">
             <NoteBody />
           </Col>
 
