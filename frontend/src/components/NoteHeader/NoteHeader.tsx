@@ -3,6 +3,9 @@ import { IoCreateOutline } from "react-icons/io5";
 import { createEditor, $getRoot } from 'lexical';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { NoteData } from '../../models/useNoteStore';
+import { createPostNoteData } from '../../models/services';
+
+const NOTES_API = "http://localhost:8080/notes"
 
 interface NoteHeaderProps {
 
@@ -18,7 +21,7 @@ interface NoteHeaderProps {
   }
 }
 
-const NoteHeader: FC<NoteHeaderProps> = ({ noteStore}) => {
+const NoteHeader: FC<NoteHeaderProps> = ({ noteStore }) => {
 
 
   const noteOnClick = (index: string) => {
@@ -36,6 +39,9 @@ const NoteHeader: FC<NoteHeaderProps> = ({ noteStore}) => {
 
     newNotes[noteLength] = newNote
     noteStore.setNotes(newNotes)
+
+    fetch(NOTES_API, createPostNoteData(newNote.title, newNote.body))
+      .then(response => response.json())
   }
 
   return (
@@ -50,24 +56,16 @@ const NoteHeader: FC<NoteHeaderProps> = ({ noteStore}) => {
 
         {Object.keys(noteStore.notes).length && <ListGroup>
           {Object.keys(noteStore.notes).map((index) => {
-            console.log("testing keys", noteStore.notes, index, noteStore.notes[index])
-            console.log("testing note", noteStore.notes)
-            if (!noteStore.notes[index]) {
-              return;
-            }
             return (
-              <div>
-
-                <ListGroupItem
-                  key={index}
-                  onClick={() => noteOnClick(index)}
-                  active={noteStore.activeNote === index}
-                >
-                  <b>{noteStore.notes[index].title}</b>
-                  <br />
-                  {createEditor().parseEditorState(JSON.parse(noteStore.notes[index].body as string)).read(() => $getRoot().getTextContent())}
-                </ListGroupItem>
-              </div>
+              <ListGroupItem
+                key={index}
+                onClick={() => noteOnClick(index)}
+                active={noteStore.activeNote === index}
+              >
+                <b>{noteStore.notes[index].title}</b>
+                <br />
+                {createEditor().parseEditorState(JSON.parse(noteStore.notes[index].body as string)).read(() => $getRoot().getTextContent())}
+              </ListGroupItem>
             )
           })}
         </ListGroup>

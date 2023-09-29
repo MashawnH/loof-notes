@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { createEditor, $getRoot, $getSelection } from 'lexical';
+import { useEffect } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import ExampleTheme from "./themes/ExampleTheme";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
@@ -8,7 +7,7 @@ import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import TreeViewPlugin from "./plugins/TreeViewPlugin";
+// import TreeViewPlugin from "./plugins/TreeViewPlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
@@ -23,6 +22,7 @@ import { TRANSFORMERS } from "@lexical/markdown";
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
+import { createPostNoteData } from '../../models/services';
 
 
 const NOTES_API = "http://localhost:8080/notes"
@@ -41,26 +41,8 @@ function OnChangePlugin({ onChange }) {
 }
 
 
-function createPostRequestOptions(title, body) {
-
-  const noteData = {
-    title: title,
-    body: body
-  }
-
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(noteData)
-  };
-
-  return requestOptions;
-}
-
 export default function Editor({ note }) {
 
-  const [editorState, setEditorState] = useState();
-  // const [editorConfig, setEditorConfig] = useState({
   const editorConfig = {
     // The editor theme
     theme: ExampleTheme,
@@ -84,77 +66,15 @@ export default function Editor({ note }) {
       LinkNode
     ]
   }
-  // });
 
   function onChange(editorState) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
     const editorStateJSON = editorState.toJSON();
-    // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
-    setEditorState(JSON.stringify(editorStateJSON));
 
-    editorState.read(() => {
-      // Read the contents of the EditorState here.
-      const root = $getRoot();
-      const selection = $getSelection();
-
-      console.log("Reading");
-      console.log(selection);
-    });
-
-    fetch(NOTES_API, createPostRequestOptions(note.title, JSON.stringify(editorStateJSON)))
+    fetch(NOTES_API, createPostNoteData(note.title, JSON.stringify(editorStateJSON)))
       .then(response => response.json())
 
-    console.log(editorState)
-
-    console.log("This is the editor state", JSON.stringify(editorStateJSON))
   }
-
-  const editor = createEditor()
-
-  // var editorState = "testing editor"
-
-  console.log("Editory body ", note.body)
-
-
-  // useEffect(() => {
-
-  //   console.log("Calling useEffect", body)
-  //   var tmpEditorConfig = {
-  //     // The editor theme
-  //     theme: ExampleTheme,
-  //     // editorState: editor.parseEditorState(JSON.parse(body)),
-  //     editorState: body,
-  //     // Handling of errors during update
-  //     onError(error) {
-  //       throw error;
-  //     },
-  //     // Any custom nodes go here
-  //     nodes: [
-  //       HeadingNode,
-  //       ListNode,
-  //       ListItemNode,
-  //       QuoteNode,
-  //       CodeNode,
-  //       CodeHighlightNode,
-  //       TableNode,
-  //       TableCellNode,
-  //       TableRowNode,
-  //       AutoLinkNode,
-  //       LinkNode
-  //     ]
-  //   };
-
-  //   // editor.setEditorConfig(tmpEditorConfig)
-  //   setEditorConfig(tmpEditorConfig)
-  // }, [body])
-
-  // useEffect(() => {
-  //   const editor = createEditor()
-  //   console.log("Editor this is body", body)
-  //   const parsedEditorState = editor.parseEditorState(JSON.parse(body.body));
-  //   editorConfig['editorState'] = parsedEditorState
-  //   console.log("Editor this is editorConfig", editorConfig)
-  // }, [])
 
   return (
     <LexicalComposer initialConfig={editorConfig} key={note.id}>
