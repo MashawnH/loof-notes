@@ -1,2 +1,0 @@
-# loof-notes
-Notes service
