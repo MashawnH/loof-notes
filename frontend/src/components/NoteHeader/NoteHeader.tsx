@@ -5,7 +5,7 @@ import { ListGroup, ListGroupItem } from 'reactstrap';
 import { NoteData } from '../../models/useNoteStore';
 import { createPostNoteData } from '../../models/services';
 
-const NOTES_API = "http://localhost:8080/notes"
+const NOTES_API = "http://localhost:4000/notes"
 
 interface NoteHeaderProps {
 

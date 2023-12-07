@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 
-const NOTES_API = "http://localhost:8080/notes"
+const NOTES_API = "http://localhost:4000/notes"
 
 export interface NoteData {
   id: string
@@ -34,6 +34,8 @@ function useNoteStore() {
         });
 
         if (jsonData) {
+          console.log(jsonData)
+          console.log(newNotes)
           setNotes(newNotes)
         }
         else {
